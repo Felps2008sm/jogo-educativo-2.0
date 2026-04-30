@@ -1,0 +1,172 @@
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    text-align: center;
+}
+
+/* HEADER */
+header {
+    padding: 20px;
+}
+
+/* MENU */
+nav button {
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    background: #00c6ff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+nav button:hover {
+    background: #0072ff;
+    transform: scale(1.05);
+}
+
+/* ABAS */
+.aba {
+    display: none;
+}
+
+.ativa {
+    display: block;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 20px;
+    width: 320px;
+    margin: auto;
+    transition: all 0.3s ease; /* 🔥 animação suave */
+}
+
+/* EMOJI */
+.emoji {
+    font-size: 70px;
+    margin: 20px 0;
+}
+
+/* INPUT */
+input {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 80%;
+    margin-top: 10px;
+}
+
+/* BOTÕES */
+button {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* FEEDBACK */
+.feedback {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* ========================= */
+/* ✍️ MONTAR PALAVRA */
+/* ========================= */
+
+.letras {
+    margin: 15px 0;
+}
+
+.letra {
+    margin: 5px;
+    padding: 12px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: none;
+    background: #00c6ff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.letra:hover {
+    background: #0072ff;
+    transform: scale(1.1);
+}
+
+.resposta-montada {
+    min-height: 40px;
+    font-size: 26px;
+    margin: 10px;
+    letter-spacing: 6px;
+    border-bottom: 2px solid white;
+}
+
+/* ========================= */
+/* 🏆 RANKING */
+/* ========================= */
+
+#listaRanking {
+    list-style: none;
+    padding: 0;
+}
+
+#listaRanking li {
+    background: rgba(255,255,255,0.1);
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* ========================= */
+/* 👤 PERFIL */
+/* ========================= */
+
+#nomeSalvo {
+    margin-top: 10px;
+    color: #00ff88;
+}
+
+/* ========================= */
+/* 🎬 ANIMAÇÕES */
+/* ========================= */
+
+@keyframes acerto {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes erro {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.acerto {
+    animation: acerto 0.3s;
+}
+
+.erro {
+    animation: erro 0.3s;
+}
