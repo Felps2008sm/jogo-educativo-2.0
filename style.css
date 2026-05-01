@@ -216,7 +216,3 @@ button:active {
 .menu.ativo {
     display: flex;
 }
-
-.menu-toggle {
-    background: red !important;
-}
