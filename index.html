@@ -30,7 +30,7 @@
 <main>
 
 <section id="inicio" class="aba ativa">
-    <h2>Bem-vindo 🚀</h2>
+    <h2>Escolha o nível</h2>
     <button onclick="selecionarNivel('pre')">Pré</button>
     <button onclick="selecionarNivel('facil')">Fácil</button>
     <button onclick="selecionarNivel('medio')">Médio</button>
@@ -42,7 +42,7 @@
         <div id="emojiEN" class="emoji"></div>
         <h3 id="palavraEN"></h3>
         <input id="respostaEN">
-        <button onclick="verificar('en','respostaEN','feedbackEN')">OK</button>
+        <button onclick="verificar('en')">Responder</button>
         <p id="feedbackEN"></p>
     </div>
 </section>
@@ -51,7 +51,7 @@
     <div class="card">
         <div id="emoji" class="emoji"></div>
         <input id="resposta">
-        <button onclick="verificar('pt','resposta','feedback')">OK</button>
+        <button onclick="verificar('pt')">Responder</button>
         <p id="feedback"></p>
     </div>
 </section>
@@ -61,7 +61,9 @@
         <div id="emojiMontar" class="emoji"></div>
         <div id="letras"></div>
         <div id="respostaMontada"></div>
-        <button onclick="verificarMontagem()">OK</button>
+        <button onclick="verificarMontagem()">Verificar</button>
+        <button onclick="limpar()">Limpar</button>
+        <p id="feedbackMontar"></p>
     </div>
 </section>
 
