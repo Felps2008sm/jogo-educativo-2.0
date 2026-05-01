@@ -8,20 +8,20 @@
 </head>  
 
 <body>  
+<header>  
+    <h1>🎮 Jogo Educativo</h1>  
 
-    <header>  
-        <h1>🎮 Jogo Educativo</h1>  
+    <div class="topo">  
+        <span>🏆 XP: <b id="xp">0</b></span>  
+        <span>⭐ Nível: <b id="nivel">1</b></span>  
+        <span>❤️ Vidas: <b id="vidas">3</b></span>  
+    </div>  
 
-        <div class="topo">  
-            <span>🏆 XP: <b id="xp">0</b></span>  
-            <span>⭐ Nível: <b id="nivel">1</b></span>  
-            <span>❤️ Vidas: <b id="vidas">3</b></span>  
-        </div>  
-
-        <!-- MENU CORRIGIDO -->
-        <div class="menu-container">
-    <button class="menu-toggle">☰</button>
-</div>
+    <!-- BOTÃO MENU -->
+    <div class="menu-container">
+        <button class="menu-toggle">☰</button>
+    </div>
+</header>
 
 <!-- OVERLAY (fundo escuro) -->
 <div id="overlay" class="overlay"></div>
@@ -35,8 +35,7 @@
     <button onclick="trocarAba('perfil')">👤 Perfil</button>
     <button onclick="trocarAba('ranking')">🏆 Ranking</button>
     <button onclick="resetarProgresso()">🔄 Resetar</button>
-</div> 
-
+</div>
     <main>  
         <!-- INICIO -->  
         <section id="inicio" class="aba ativa">  
