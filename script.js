@@ -34,49 +34,43 @@ let atual;
 let xp = 0;
 let nivel = 1;
 let vidas = 3;
+let acertosSeguidos = 0;
+let ultimaPalavra = null;
 
 let nomeJogador = localStorage.getItem("nome") || "";
+let conquistas = JSON.parse(localStorage.getItem("conquistas")) || [];
 
 // =============================
 // 💾 PROGRESSO
 // =============================
 function salvarProgresso() {
-    const dados = {
-        nome: nomeJogador,
-        xp,
-        nivel,
-        vidas,
-        nivelIdade
-    };
+    const dados = { nome: nomeJogador, xp, nivel, vidas, nivelIdade };
     localStorage.setItem("progresso", JSON.stringify(dados));
 }
 
 function carregarProgresso() {
-    const dados = JSON.parse(localStorage.getItem("progresso"));
+    try {
+        const dados = JSON.parse(localStorage.getItem("progresso"));
+        if (!dados) return;
 
-    if (dados) {
         nomeJogador = dados.nome || "";
         xp = dados.xp || 0;
         nivel = dados.nivel || 1;
         vidas = dados.vidas || 3;
         nivelIdade = dados.nivelIdade || "pre";
         palavras = banco[nivelIdade];
+    } catch {
+        console.warn("Erro ao carregar progresso");
     }
 }
 
 // =============================
-// 🎯 TROCAR NÍVEL
+// 🎯 NÍVEL
 // =============================
 function selecionarNivel(nivel) {
     nivelIdade = nivel;
     palavras = banco[nivel];
-
     localStorage.setItem("nivelIdade", nivel);
-
-    alert("Nível selecionado: " + nivel);
-
-    novaPalavra();
-    novaPalavraMontar();
 }
 
 // =============================
@@ -92,7 +86,11 @@ function normalizar(t) {
 // 🔄 NOVA PALAVRA
 // =============================
 function novaPalavra() {
-    atual = palavras[Math.floor(Math.random() * palavras.length)];
+    do {
+        atual = palavras[Math.floor(Math.random() * palavras.length)];
+    } while (atual === ultimaPalavra);
+
+    ultimaPalavra = atual;
 
     document.getElementById("emoji").innerText = atual.img;
     document.getElementById("emojiEN").innerText = atual.img;
@@ -103,23 +101,33 @@ function novaPalavra() {
 }
 
 // =============================
-// 🇧🇷 PORTUGUÊS
+// ✅ VERIFICAR
 // =============================
-function verificarPT() {
-    const r = normalizar(document.getElementById("resposta").value);
-    const c = normalizar(atual.w);
+function verificar(tipo, inputId, feedbackId) {
+    const r = normalizar(document.getElementById(inputId).value);
+    const c = normalizar(tipo === "pt" ? atual.w : atual.en);
 
-    r === c ? acerto("feedback") : erro("feedback", atual.w);
+    r === c ? acerto(feedbackId) : erro(feedbackId, tipo === "pt" ? atual.w : atual.en);
 }
 
 // =============================
-// 🌎 INGLÊS
+// 🏆 CONQUISTAS
 // =============================
-function verificarEN() {
-    const r = normalizar(document.getElementById("respostaEN").value);
-    const c = normalizar(atual.w);
+function desbloquearConquista(nome) {
+    if (!conquistas.includes(nome)) {
+        conquistas.push(nome);
+        localStorage.setItem("conquistas", JSON.stringify(conquistas));
+        alert("🏆 " + nome);
+    }
+}
 
-    r === c ? acerto("feedbackEN") : erro("feedbackEN", atual.w);
+function verificarConquistas() {
+    if (xp >= 100) desbloquearConquista("Primeiros passos");
+    if (xp >= 500) desbloquearConquista("Aprendiz");
+    if (xp >= 1000) desbloquearConquista("Mestre");
+
+    if (acertosSeguidos >= 10) desbloquearConquista("Combo insano 🔥");
+    if (nivel >= 5) desbloquearConquista("Subindo rápido 🚀");
 }
 
 // =============================
@@ -128,12 +136,20 @@ function verificarEN() {
 function acerto(id) {
     document.getElementById("somAcerto").play();
 
-    xp += 10;
+    acertosSeguidos++;
+    xp += 10 + (acertosSeguidos * 2);
+
+    // dificuldade automática
+    if (acertosSeguidos === 5) selecionarNivel("facil");
+    if (acertosSeguidos === 10) selecionarNivel("medio");
+    if (acertosSeguidos === 15) selecionarNivel("dificil");
 
     if (xp >= nivel * 100) {
         nivel++;
         alert("⭐ Subiu de nível!");
     }
+
+    verificarConquistas();
 
     mostrarAcerto(id);
     salvarRanking();
@@ -143,11 +159,9 @@ function acerto(id) {
     setTimeout(() => {
         const aba = document.querySelector(".aba.ativa")?.id;
 
-        if (aba === "montar") {
-            novaPalavraMontar();
-        } else {
-            novaPalavra();
-        }
+        if (aba === "montar") novaPalavraMontar();
+        else if (aba === "reverso") novaPerguntaReversa();
+        else novaPalavra();
     }, 800);
 }
 
@@ -158,6 +172,7 @@ function erro(id, correta) {
     document.getElementById("somErro").play();
 
     vidas--;
+    acertosSeguidos = 0;
 
     if (vidas <= 0) {
         alert("💀 Game Over");
@@ -189,6 +204,7 @@ function trocarAba(id) {
 
     if (id === "ranking") mostrarRanking();
     if (id === "montar") novaPalavraMontar();
+    if (id === "reverso") novaPerguntaReversa();
     if (id === "portugues" || id === "ingles") novaPalavra();
 }
 
@@ -196,29 +212,16 @@ function trocarAba(id) {
 // 💬 FEEDBACK
 // =============================
 function mostrarAcerto(id) {
+    const frases = ["Mandou bem! 🚀", "Acertou! 😎", "Boa! 💥"];
     const el = document.getElementById(id);
-    el.innerHTML = "😊 ✅ Muito bem!";
+    el.innerHTML = frases[Math.floor(Math.random() * frases.length)];
     el.style.color = "#00ff88";
-    animarCard(true);
 }
 
 function mostrarErro(id, correta) {
     const el = document.getElementById(id);
-    el.innerHTML = `😢 ❌ Era: <b>${correta}</b>`;
+    el.innerHTML = `❌ Era: <b>${correta}</b>`;
     el.style.color = "#ff4d4d";
-    animarCard(false);
-}
-
-// =============================
-// ✨ ANIMAÇÃO
-// =============================
-function animarCard(acerto) {
-    const card = document.querySelector(".card");
-    if (!card) return;
-
-    card.classList.remove("acerto", "erro");
-    void card.offsetWidth;
-    card.classList.add(acerto ? "acerto" : "erro");
 }
 
 // =============================
@@ -232,7 +235,6 @@ function novaPalavraMontar() {
     palavraMontar = item.w;
 
     document.getElementById("emojiMontar").innerText = item.img;
-
     gerarLetras(palavraMontar);
     limpar();
 }
@@ -241,17 +243,11 @@ function gerarLetras(palavra) {
     const container = document.getElementById("letras");
     container.innerHTML = "";
 
-    let letras = palavra.split("");
-
-    for (let i = letras.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [letras[i], letras[j]] = [letras[j], letras[i]];
-    }
+    let letras = palavra.split("").sort(() => Math.random() - 0.5);
 
     letras.forEach(letra => {
         const btn = document.createElement("button");
         btn.innerText = letra;
-        btn.className = "letra";
         btn.onclick = () => selecionarLetra(letra);
         container.appendChild(btn);
     });
@@ -269,23 +265,52 @@ function limpar() {
 
 function verificarMontagem() {
     if (respostaUsuario === palavraMontar) {
-        mostrarAcerto("feedbackMontar");
-        salvarProgresso();
-        setTimeout(novaPalavraMontar, 800);
+        acerto("feedbackMontar");
     } else {
-        mostrarErro("feedbackMontar", palavraMontar);
+        erro("feedbackMontar", palavraMontar);
     }
+}
+
+// =============================
+// 🌎 MODO REVERSO
+// =============================
+let respostaCorretaEmoji = "";
+
+function novaPerguntaReversa() {
+    const correta = palavras[Math.floor(Math.random() * palavras.length)];
+    respostaCorretaEmoji = correta.img;
+
+    document.getElementById("palavraReverso").innerText = correta.en;
+
+    let opcoes = [correta];
+
+    while (opcoes.length < 4) {
+        let aleatoria = palavras[Math.floor(Math.random() * palavras.length)];
+        if (!opcoes.includes(aleatoria)) opcoes.push(aleatoria);
+    }
+
+    opcoes.sort(() => Math.random() - 0.5);
+
+    const container = document.getElementById("opcoesEmoji");
+    container.innerHTML = "";
+
+    opcoes.forEach(op => {
+        const btn = document.createElement("button");
+        btn.innerText = op.img;
+        btn.onclick = () => verificarReverso(op.img);
+        container.appendChild(btn);
+    });
+}
+
+function verificarReverso(resposta) {
+    resposta === respostaCorretaEmoji
+        ? acerto("feedbackReverso")
+        : erro("feedbackReverso", "🙂");
 }
 
 // =============================
 // 🏆 RANKING
 // =============================
-function salvarNome() {
-    nomeJogador = document.getElementById("nomeJogador").value;
-    localStorage.setItem("nome", nomeJogador);
-    salvarProgresso();
-}
-
 function salvarRanking() {
     if (!nomeJogador) return;
 
