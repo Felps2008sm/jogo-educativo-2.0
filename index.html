@@ -23,13 +23,15 @@
             <button onclick="trocarAba('ingles')">🌎 Inglês</button>
             <button onclick="trocarAba('portugues')">📚 Português</button>
             <button onclick="trocarAba('montar')">✍️ Montar</button>
+            <button onclick="trocarAba('reverso')">🔄 Reverso</button>
             <button onclick="trocarAba('perfil')">👤 Perfil</button>
             <button onclick="trocarAba('ranking')">🏆 Ranking</button>
-            <button onclick="resetarProgresso()">🔄 Resetar Progresso</button>
+            <button onclick="resetarProgresso()">🔄 Resetar</button>
         </nav>
     </header>
 
     <main>
+
         <!-- INICIO -->
         <section id="inicio" class="aba ativa">
             <h2>Bem-vindo 🚀</h2>
@@ -39,13 +41,14 @@
                 <h3>👨‍💻 Felipe Souza de Melo</h3>
                 <p>💻 HTML • CSS • JavaScript</p>
             </div>
+
             <div class="niveis">
                 <h3>Escolha o nível:</h3>
 
-                <button onclick="mudarDificuldade('pre')">👶 Pré</button>
-                <button onclick="mudarDificuldade('facil')">🟢 Fácil</button>
-                <button onclick="mudarDificuldade('medio')">🟡 Médio</button>
-                <button onclick="mudarDificuldade('dificil')">🔴 Difícil</button>
+                <button onclick="selecionarNivel('pre')">👶 Pré</button>
+                <button onclick="selecionarNivel('facil')">🟢 Fácil</button>
+                <button onclick="selecionarNivel('medio')">🟡 Médio</button>
+                <button onclick="selecionarNivel('dificil')">🔴 Difícil</button>
 
                 <p id="nivelAtual"></p>
             </div>
@@ -56,8 +59,10 @@
             <div class="card">
                 <div id="emojiEN" class="emoji">🐱</div>
                 <h3 id="palavraEN">CAT</h3>
+
                 <input id="respostaEN" placeholder="Traduza para português">
-                <button onclick="verificarEN()">Responder</button>
+                <button onclick="verificar('en','respostaEN','feedbackEN')">Responder</button>
+
                 <p id="feedbackEN"></p>
             </div>
         </section>
@@ -66,22 +71,20 @@
         <section id="portugues" class="aba">
             <div class="card">
                 <div id="emoji" class="emoji">🐱</div>
+
                 <input id="resposta" placeholder="Digite a palavra">
-                <button onclick="verificarPT()">Responder</button>
+                <button onclick="verificar('pt','resposta','feedback')">Responder</button>
+
                 <p id="feedback"></p>
             </div>
         </section>
 
-        <!-- ✍️ NOVA ABA MONTAR -->
+        <!-- MONTAR -->
         <section id="montar" class="aba">
             <div class="card">
-
-                <h2>✍️ Monte a palavra 🔤</h2>
-
-                <p>Monte corretamente a palavra usando as letras:</p>
+                <h2>✍️ Monte a palavra</h2>
 
                 <div id="letras" class="letras"></div>
-
                 <div id="respostaMontada" class="resposta-montada"></div>
                 <div id="emojiMontar" class="emoji">🐱</div>
 
@@ -89,24 +92,37 @@
                 <button onclick="limpar()">Limpar</button>
 
                 <p id="feedbackMontar"></p>
-
             </div>
         </section>
+
+        <!-- 🌎 REVERSO -->
+        <section id="reverso" class="aba">
+            <div class="card">
+                <h2>🔄 Modo Reverso</h2>
+
+                <p id="palavraReverso"></p>
+                <div id="opcoesEmoji"></div>
+
+                <p id="feedbackReverso"></p>
+            </div>
+        </section>
+
+        <!-- PERFIL -->
         <section id="perfil" class="aba">
             <div class="card">
                 <h2>👤 Seu Nome</h2>
 
                 <input id="nomeJogador" placeholder="Digite seu nome">
-
                 <button onclick="salvarNome()">Salvar</button>
 
                 <p id="nomeSalvo"></p>
             </div>
         </section>
+
+        <!-- RANKING -->
         <section id="ranking" class="aba">
             <div class="card">
                 <h2>🏆 Ranking</h2>
-
                 <ul id="listaRanking"></ul>
             </div>
         </section>
@@ -118,5 +134,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>
