@@ -347,3 +347,8 @@ window.onload = () => {
     atualizarUI();
     novaPalavra();
 };
+
+function resetarProgresso() {
+    localStorage.clear();
+    location.reload();
+}
