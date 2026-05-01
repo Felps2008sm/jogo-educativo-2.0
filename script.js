@@ -1,4 +1,4 @@
-// =============================
+se// =============================
 // 🧠 PALAVRAS POR NÍVEL
 // =============================
 const banco = {
@@ -323,18 +323,25 @@ window.onload = () => {
     novaPalavra();
 };
 
-function toggleMenu() {
-    const menu = document.getElementById("menu");
-    menu.classList.toggle("ativo");
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     const botao = document.querySelector(".menu-toggle");
     const menu = document.getElementById("menu");
+    const overlay = document.getElementById("overlay");
 
-    if (botao && menu) {
-        botao.addEventListener("click", () => {
-            menu.classList.toggle("ativo");
-        });
+    function abrirMenu() {
+        menu.classList.add("ativo");
+        overlay.classList.add("ativo");
     }
+
+    function fecharMenu() {
+        menu.classList.remove("ativo");
+        overlay.classList.remove("ativo");
+    }
+
+    botao.addEventListener("click", (e) => {
+        e.stopPropagation();
+        abrirMenu();
+    });
+
+    overlay.addEventListener("click", fecharMenu);
 });
