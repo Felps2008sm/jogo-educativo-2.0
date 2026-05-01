@@ -18,15 +18,22 @@
             <span>❤️ Vidas: <b id="vidas">3</b></span>
         </div>
 
-        <nav>
-            <button onclick="trocarAba('inicio')">🏠 Início</button>
-            <button onclick="trocarAba('ingles')">🌎 Inglês</button>
-            <button onclick="trocarAba('portugues')">📚 Português</button>
-            <button onclick="trocarAba('montar')">✍️ Montar</button>
-            <button onclick="trocarAba('perfil')">👤 Perfil</button>
-            <button onclick="trocarAba('ranking')">🏆 Ranking</button>
-            <button onclick="resetarProgresso()">🔄 Resetar Progresso</button>
-        </nav>
+       <div class="menu-container">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+   <div class="menu-container">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <div id="menu" class="menu">
+        <button onclick="trocarAba('inicio')">🏠 Início</button>
+        <button onclick="trocarAba('ingles')">🌎 Inglês</button>
+        <button onclick="trocarAba('portugues')">📚 Português</button>
+        <button onclick="trocarAba('montar')">✍️ Montar</button>
+        <button onclick="trocarAba('perfil')">👤 Perfil</button>
+        <button onclick="trocarAba('ranking')">🏆 Ranking</button>
+        <button onclick="resetarProgresso()">🔄 Resetar</button>
+    </div>
+</div>
     </header>
 
     <main>
