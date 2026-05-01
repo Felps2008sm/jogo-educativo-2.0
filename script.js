@@ -1,45 +1,98 @@
+// =============================
+// 🧠 PALAVRAS POR NÍVEL
+// =============================
 const banco = {
     pre: [
-        { w:"GATO", en:"CAT", img:"🐱" },
-        { w:"BOLA", en:"BALL", img:"⚽" }
+        { w: "GATO", en: "CAT", img: "🐱" },
+        { w: "BOLA", en: "BALL", img: "⚽" },
+        { w: "CASA", en: "HOUSE", img: "🏠" }
     ],
     facil: [
-        { w:"PATO", en:"DUCK", img:"🦆" }
+        { w: "PATO", en: "DUCK", img: "🦆" },
+        { w: "PEIXE", en: "FISH", img: "🐟" },
+        { w: "FLOR", en: "FLOWER", img: "🌸" }
     ],
     medio: [
-        { w:"MACACO", en:"MONKEY", img:"🐵" }
+        { w: "MACACO", en: "MONKEY", img: "🐵" },
+        { w: "CAVALO", en: "HORSE", img: "🐴" },
+        { w: "ESCOLA", en: "SCHOOL", img: "🏫" }
     ],
     dificil: [
-        { w:"ELEFANTE", en:"ELEPHANT", img:"🐘" }
+        { w: "ELEFANTE", en: "ELEPHANT", img: "🐘" },
+        { w: "COMPUTADOR", en: "COMPUTER", img: "💻" },
+        { w: "TARTARUGA", en: "TURTLE", img: "🐢" }
     ]
 };
 
-let palavras = banco.pre;
+let nivelIdade = localStorage.getItem("nivelIdade") || "pre";
+let palavras = banco[nivelIdade];
+
+// =============================
+// 🎮 VARIÁVEIS
+// =============================
 let atual;
 let xp = 0;
 let nivel = 1;
 let vidas = 3;
-let respostaUsuario = "";
 
-// ================= ABA
-function trocarAba(id){
-    document.querySelectorAll(".aba").forEach(a=>a.classList.remove("ativa"));
-    document.getElementById(id).classList.add("ativa");
+let nomeJogador = localStorage.getItem("nome") || "";
 
-    if(id==="ingles"||id==="portugues") novaPalavra();
-    if(id==="montar") novaMontar();
-    if(id==="reverso") novaReversa();
+// =============================
+// 💾 PROGRESSO
+// =============================
+function salvarProgresso() {
+    const dados = {
+        nome: nomeJogador,
+        xp,
+        nivel,
+        vidas,
+        nivelIdade
+    };
+    localStorage.setItem("progresso", JSON.stringify(dados));
 }
 
-// ================= NIVEL
-function selecionarNivel(n){
-    palavras = banco[n];
+function carregarProgresso() {
+    const dados = JSON.parse(localStorage.getItem("progresso"));
+
+    if (dados) {
+        nomeJogador = dados.nome || "";
+        xp = dados.xp || 0;
+        nivel = dados.nivel || 1;
+        vidas = dados.vidas || 3;
+        nivelIdade = dados.nivelIdade || "pre";
+        palavras = banco[nivelIdade];
+    }
+}
+
+// =============================
+// 🎯 TROCAR NÍVEL
+// =============================
+function selecionarNivel(nivel) {
+    nivelIdade = nivel;
+    palavras = banco[nivel];
+
+    localStorage.setItem("nivelIdade", nivel);
+
+    alert("Nível selecionado: " + nivel);
+
     novaPalavra();
+    novaPalavraMontar();
 }
 
-// ================= PALAVRA
-function novaPalavra(){
-    atual = palavras[Math.floor(Math.random()*palavras.length)];
+// =============================
+// 🔧 UTIL
+// =============================
+function normalizar(t) {
+    return t.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+// =============================
+// 🔄 NOVA PALAVRA
+// =============================
+function novaPalavra() {
+    atual = palavras[Math.floor(Math.random() * palavras.length)];
 
     document.getElementById("emoji").innerText = atual.img;
     document.getElementById("emojiEN").innerText = atual.img;
@@ -49,116 +102,223 @@ function novaPalavra(){
     document.getElementById("respostaEN").value = "";
 }
 
-// ================= VERIFICAR
-function verificar(tipo){
-    let r = tipo==="pt"
-        ? document.getElementById("resposta").value.toUpperCase()
-        : document.getElementById("respostaEN").value.toUpperCase();
+// =============================
+// 🇧🇷 PORTUGUÊS
+// =============================
+function verificarPT() {
+    const r = normalizar(document.getElementById("resposta").value);
+    const c = normalizar(atual.w);
 
-    let c = tipo==="pt" ? atual.w : atual.en;
-
-    if(r === c) acerto(tipo);
-    else erro(tipo,c);
+    r === c ? acerto("feedback") : erro("feedback", atual.w);
 }
 
-// ================= ACERTO
-function acerto(tipo){
-    xp += 10;
+// =============================
+// 🌎 INGLÊS
+// =============================
+function verificarEN() {
+    const r = normalizar(document.getElementById("respostaEN").value);
+    const c = normalizar(atual.w);
+
+    r === c ? acerto("feedbackEN") : erro("feedbackEN", atual.w);
+}
+
+// =============================
+// ✅ ACERTO
+// =============================
+function acerto(id) {
     document.getElementById("somAcerto").play();
 
-    if(tipo==="pt")
-        document.getElementById("feedback").innerText="✅";
-    else
-        document.getElementById("feedbackEN").innerText="✅";
+    xp += 10;
 
-    atualizar();
+    if (xp >= nivel * 100) {
+        nivel++;
+        alert("⭐ Subiu de nível!");
+    }
+
+    mostrarAcerto(id);
+    salvarRanking();
+    salvarProgresso();
+    atualizarUI();
+
+    setTimeout(() => {
+        const aba = document.querySelector(".aba.ativa")?.id;
+
+        if (aba === "montar") {
+            novaPalavraMontar();
+        } else {
+            novaPalavra();
+        }
+    }, 800);
 }
 
-// ================= ERRO
-function erro(tipo,c){
-    vidas--;
+// =============================
+// ❌ ERRO
+// =============================
+function erro(id, correta) {
     document.getElementById("somErro").play();
 
-    if(tipo==="pt")
-        document.getElementById("feedback").innerText="❌ "+c;
-    else
-        document.getElementById("feedbackEN").innerText="❌ "+c;
+    vidas--;
 
-    atualizar();
+    if (vidas <= 0) {
+        alert("💀 Game Over");
+        xp = 0;
+        nivel = 1;
+        vidas = 3;
+    }
+
+    mostrarErro(id, correta);
+    salvarProgresso();
+    atualizarUI();
 }
 
-// ================= UI
-function atualizar(){
+// =============================
+// 🎯 UI
+// =============================
+function atualizarUI() {
     document.getElementById("xp").innerText = xp;
     document.getElementById("nivel").innerText = nivel;
     document.getElementById("vidas").innerText = vidas;
 }
 
-// ================= MONTAR
-function novaMontar(){
-    const item = palavras[Math.floor(Math.random()*palavras.length)];
-    atual = item;
-    respostaUsuario="";
+// =============================
+// 📑 ABAS
+// =============================
+function trocarAba(id) {
+    document.querySelectorAll(".aba").forEach(a => a.classList.remove("ativa"));
+    document.getElementById(id).classList.add("ativa");
 
-    document.getElementById("emojiMontar").innerText=item.img;
+    if (id === "ranking") mostrarRanking();
+    if (id === "montar") novaPalavraMontar();
+    if (id === "portugues" || id === "ingles") novaPalavra();
+}
 
-    let letras = item.w.split("").sort(()=>Math.random()-0.5);
+// =============================
+// 💬 FEEDBACK
+// =============================
+function mostrarAcerto(id) {
+    const el = document.getElementById(id);
+    el.innerHTML = "😊 ✅ Muito bem!";
+    el.style.color = "#00ff88";
+    animarCard(true);
+}
 
-    let cont = document.getElementById("letras");
-    cont.innerHTML="";
+function mostrarErro(id, correta) {
+    const el = document.getElementById(id);
+    el.innerHTML = `😢 ❌ Era: <b>${correta}</b>`;
+    el.style.color = "#ff4d4d";
+    animarCard(false);
+}
 
-    letras.forEach(l=>{
-        let b=document.createElement("button");
-        b.innerText=l;
-        b.onclick=()=> {
-            respostaUsuario+=l;
-            document.getElementById("respostaMontada").innerText=respostaUsuario;
-        };
-        cont.appendChild(b);
+// =============================
+// ✨ ANIMAÇÃO
+// =============================
+function animarCard(acerto) {
+    const card = document.querySelector(".card");
+    if (!card) return;
+
+    card.classList.remove("acerto", "erro");
+    void card.offsetWidth;
+    card.classList.add(acerto ? "acerto" : "erro");
+}
+
+// =============================
+// ✍️ MONTAR PALAVRA
+// =============================
+let palavraMontar = "";
+let respostaUsuario = "";
+
+function novaPalavraMontar() {
+    const item = palavras[Math.floor(Math.random() * palavras.length)];
+    palavraMontar = item.w;
+
+    document.getElementById("emojiMontar").innerText = item.img;
+
+    gerarLetras(palavraMontar);
+    limpar();
+}
+
+function gerarLetras(palavra) {
+    const container = document.getElementById("letras");
+    container.innerHTML = "";
+
+    let letras = palavra.split("");
+
+    for (let i = letras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [letras[i], letras[j]] = [letras[j], letras[i]];
+    }
+
+    letras.forEach(letra => {
+        const btn = document.createElement("button");
+        btn.innerText = letra;
+        btn.className = "letra";
+        btn.onclick = () => selecionarLetra(letra);
+        container.appendChild(btn);
     });
 }
 
-function verificarMontagem(){
-    if(respostaUsuario===atual.w)
-        document.getElementById("feedbackMontar").innerText="✅";
-    else
-        document.getElementById("feedbackMontar").innerText="❌ "+atual.w;
+function selecionarLetra(letra) {
+    respostaUsuario += letra;
+    document.getElementById("respostaMontada").innerText = respostaUsuario;
 }
 
-function limpar(){
-    respostaUsuario="";
-    document.getElementById("respostaMontada").innerText="";
+function limpar() {
+    respostaUsuario = "";
+    document.getElementById("respostaMontada").innerText = "";
 }
 
-// ================= REVERSO
-function novaReversa(){
-    const correta = palavras[Math.floor(Math.random()*palavras.length)];
+function verificarMontagem() {
+    if (respostaUsuario === palavraMontar) {
+        mostrarAcerto("feedbackMontar");
+        salvarProgresso();
+        setTimeout(novaPalavraMontar, 800);
+    } else {
+        mostrarErro("feedbackMontar", palavraMontar);
+    }
+}
 
-    document.getElementById("palavraReverso").innerText = correta.en;
+// =============================
+// 🏆 RANKING
+// =============================
+function salvarNome() {
+    nomeJogador = document.getElementById("nomeJogador").value;
+    localStorage.setItem("nome", nomeJogador);
+    salvarProgresso();
+}
 
-    let cont = document.getElementById("opcoesEmoji");
-    cont.innerHTML="";
+function salvarRanking() {
+    if (!nomeJogador) return;
 
-    palavras.forEach(p=>{
-        let b=document.createElement("button");
-        b.innerText=p.img;
+    let ranking = JSON.parse(localStorage.getItem("ranking")) || [];
 
-        b.onclick=()=>{
-            if(p===correta){
-                document.getElementById("feedbackReverso").innerText="✅";
-                xp+=10;
-            } else {
-                document.getElementById("feedbackReverso").innerText="❌";
-            }
-            atualizar();
-        };
+    const jogador = ranking.find(j => j.nome === nomeJogador);
 
-        cont.appendChild(b);
+    if (jogador) jogador.xp = xp;
+    else ranking.push({ nome: nomeJogador, xp });
+
+    ranking.sort((a, b) => b.xp - a.xp);
+
+    localStorage.setItem("ranking", JSON.stringify(ranking));
+}
+
+function mostrarRanking() {
+    const lista = document.getElementById("listaRanking");
+    lista.innerHTML = "";
+
+    let ranking = JSON.parse(localStorage.getItem("ranking")) || [];
+
+    ranking.forEach(j => {
+        const li = document.createElement("li");
+        li.innerText = `${j.nome} - ${j.xp} XP`;
+        lista.appendChild(li);
     });
 }
 
-// ================= START
-window.onload = ()=>{
+// =============================
+// 🚀 INICIAR
+// =============================
+window.onload = () => {
+    carregarProgresso();
+    atualizarUI();
     novaPalavra();
-    atualizar();
 };
