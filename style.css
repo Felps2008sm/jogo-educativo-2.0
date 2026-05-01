@@ -1,22 +1,26 @@
 body {
-    margin: 0;
-    font-family: Arial;
-    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color: white;
-    text-align: center;
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+    text-align:center;
+}
+
+.topo {
+    margin:10px;
 }
 
 nav button {
     margin:5px;
     padding:10px;
-    border-radius:10px;
     border:none;
+    border-radius:10px;
     background:#00c6ff;
     color:white;
 }
 
 .card {
-    background: rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.1);
     padding:20px;
     border-radius:20px;
     width:90%;
@@ -28,19 +32,31 @@ nav button {
     font-size:60px;
 }
 
-.aba {display:none;}
-.ativa {display:block;}
+input {
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    width:80%;
+}
 
 button {
     margin-top:10px;
     padding:10px;
-    border-radius:10px;
     border:none;
+    border-radius:10px;
     background:#0072ff;
     color:white;
 }
 
+.aba { display:none; }
+.ativa { display:block; }
+
+.letra {
+    margin:5px;
+    padding:10px;
+    font-size:18px;
+}
+
 #opcoesEmoji button {
     font-size:30px;
-    margin:5px;
 }
