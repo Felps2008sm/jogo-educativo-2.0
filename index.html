@@ -1,124 +1,122 @@
-<!DOCTYPE html>  
-<html lang="pt-br">  
+<!DOCTYPE html>
+<html lang="pt-br">
 
-<head>  
-    <meta charset="UTF-8">  
-    <title>Jogo Educativo</title>  
-    <link rel="stylesheet" href="style.css">  
-</head>  
+<head>
+    <meta charset="UTF-8">
+    <title>Jogo Educativo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-<body>  
-<header>  
-    <h1>🎮 Jogo Educativo</h1>  
+<body>
 
-    <div class="topo">  
-        <span>🏆 XP: <b id="xp">0</b></span>  
-        <span>⭐ Nível: <b id="nivel">1</b></span>  
-        <span>❤️ Vidas: <b id="vidas">3</b></span>  
-    </div>  
+    <header>
+        <h1>🎮 Jogo Educativo</h1>
 
-    <!-- BOTÃO MENU -->
-    <div class="menu-container">
-        <button class="menu-toggle">☰</button>
-    </div>
-</header>
+        <div class="topo">
+            <span>🏆 XP: <b id="xp">0</b></span>
+            <span>⭐ Nível: <b id="nivel">1</b></span>
+            <span>❤️ Vidas: <b id="vidas">3</b></span>
+        </div>
 
-<!-- OVERLAY (fundo escuro) -->
-<div id="overlay" class="overlay"></div>
+        <nav>
+            <button onclick="trocarAba('inicio')">🏠 Início</button>
+            <button onclick="trocarAba('ingles')">🌎 Inglês</button>
+            <button onclick="trocarAba('portugues')">📚 Português</button>
+            <button onclick="trocarAba('montar')">✍️ Montar</button>
+            <button onclick="trocarAba('perfil')">👤 Perfil</button>
+            <button onclick="trocarAba('ranking')">🏆 Ranking</button>
+            <button onclick="resetarProgresso()">🔄 Resetar Progresso</button>
+        </nav>
+    </header>
 
-<!-- MENU LATERAL -->
-<div id="menu" class="menu-lateral">
-    <button onclick="trocarAba('inicio')">🏠 Início</button>
-    <button onclick="trocarAba('ingles')">🌎 Inglês</button>
-    <button onclick="trocarAba('portugues')">📚 Português</button>
-    <button onclick="trocarAba('montar')">✍️ Montar</button>
-    <button onclick="trocarAba('perfil')">👤 Perfil</button>
-    <button onclick="trocarAba('ranking')">🏆 Ranking</button>
-    <button onclick="resetarProgresso()">🔄 Resetar</button>
-</div>
-    <main>  
-        <!-- INICIO -->  
-        <section id="inicio" class="aba ativa">  
-            <h2>Bem-vindo 🚀</h2>  
-            <p>Aprenda jogando com palavras e emojis!</p>  
+    <main>
+        <!-- INICIO -->
+        <section id="inicio" class="aba ativa">
+            <h2>Bem-vindo 🚀</h2>
+            <p>Aprenda jogando com palavras e emojis!</p>
 
-            <div class="autor">  
-                <h3>👨‍💻 Felipe Souza de Melo</h3>  
-                <p>💻 HTML • CSS • JavaScript</p>  
-            </div>  
+            <div class="autor">
+                <h3>👨‍💻 Felipe Souza de Melo</h3>
+                <p>💻 HTML • CSS • JavaScript</p>
+            </div>
+            <div class="niveis">
+                <h3>Escolha o nível:</h3>
 
-            <div class="niveis">  
-                <h3>Escolha o nível:</h3>  
-              
-                <button onclick="mudarDificuldade('pre')">👶 Pré</button>  
-                <button onclick="mudarDificuldade('facil')">🟢 Fácil</button>  
-                <button onclick="mudarDificuldade('medio')">🟡 Médio</button>  
-                <button onclick="mudarDificuldade('dificil')">🔴 Difícil</button>  
-              
-                <p id="nivelAtual"></p>  
-            </div>  
-        </section>  
+                <button onclick="mudarDificuldade('pre')">👶 Pré</button>
+                <button onclick="mudarDificuldade('facil')">🟢 Fácil</button>
+                <button onclick="mudarDificuldade('medio')">🟡 Médio</button>
+                <button onclick="mudarDificuldade('dificil')">🔴 Difícil</button>
 
-        <!-- INGLES -->  
-        <section id="ingles" class="aba">  
-            <div class="card">  
-                <div id="emojiEN" class="emoji">🐱</div>  
-                <h3 id="palavraEN">CAT</h3>  
-                <input id="respostaEN" placeholder="Traduza para português">  
-                <button onclick="verificarEN()">Responder</button>  
-                <p id="feedbackEN"></p>  
-            </div>  
-        </section>  
+                <p id="nivelAtual"></p>
+            </div>
+        </section>
 
-        <!-- PORTUGUES -->  
-        <section id="portugues" class="aba">  
-            <div class="card">  
-                <div id="emoji" class="emoji">🐱</div>  
-                <input id="resposta" placeholder="Digite a palavra">  
-                <button onclick="verificarPT()">Responder</button>  
-                <p id="feedback"></p>  
-            </div>  
-        </section>  
+        <!-- INGLES -->
+        <section id="ingles" class="aba">
+            <div class="card">
+                <div id="emojiEN" class="emoji">🐱</div>
+                <h3 id="palavraEN">CAT</h3>
+                <input id="respostaEN" placeholder="Traduza para português">
+                <button onclick="verificarEN()">Responder</button>
+                <p id="feedbackEN"></p>
+            </div>
+        </section>
 
-        <!-- MONTAR -->  
-        <section id="montar" class="aba">  
-            <div class="card">  
-                <h2>✍️ Monte a palavra 🔤</h2>  
-                <p>Monte corretamente a palavra usando as letras:</p>  
+        <!-- PORTUGUES -->
+        <section id="portugues" class="aba">
+            <div class="card">
+                <div id="emoji" class="emoji">🐱</div>
+                <input id="resposta" placeholder="Digite a palavra">
+                <button onclick="verificarPT()">Responder</button>
+                <p id="feedback"></p>
+            </div>
+        </section>
 
-                <div id="letras" class="letras"></div>  
-                <div id="respostaMontada" class="resposta-montada"></div>  
-                <div id="emojiMontar" class="emoji">🐱</div>  
+        <!-- ✍️ NOVA ABA MONTAR -->
+        <section id="montar" class="aba">
+            <div class="card">
 
-                <button onclick="verificarMontagem()">Verificar</button>  
-                <button onclick="limpar()">Limpar</button>  
-                <p id="feedbackMontar"></p>  
-            </div>  
-        </section>  
+                <h2>✍️ Monte a palavra 🔤</h2>
 
-        <!-- PERFIL -->  
-        <section id="perfil" class="aba">  
-            <div class="card">  
-                <h2>👤 Seu Nome</h2>  
-                <input id="nomeJogador" placeholder="Digite seu nome">  
-                <button onclick="salvarNome()">Salvar</button>  
-                <p id="nomeSalvo"></p>  
-            </div>  
-        </section>  
+                <p>Monte corretamente a palavra usando as letras:</p>
 
-        <!-- RANKING -->  
-        <section id="ranking" class="aba">  
-            <div class="card">  
-                <h2>🏆 Ranking</h2>  
-                <ul id="listaRanking"></ul>  
-            </div>  
-        </section>  
+                <div id="letras" class="letras"></div>
 
-    </main>  
+                <div id="respostaMontada" class="resposta-montada"></div>
+                <div id="emojiMontar" class="emoji">🐱</div>
 
-    <audio id="somAcerto" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>  
-    <audio id="somErro" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>  
+                <button onclick="verificarMontagem()">Verificar</button>
+                <button onclick="limpar()">Limpar</button>
 
-    <script src="script.js"></script>  
-</body>  
+                <p id="feedbackMontar"></p>
+
+            </div>
+        </section>
+        <section id="perfil" class="aba">
+            <div class="card">
+                <h2>👤 Seu Nome</h2>
+
+                <input id="nomeJogador" placeholder="Digite seu nome">
+
+                <button onclick="salvarNome()">Salvar</button>
+
+                <p id="nomeSalvo"></p>
+            </div>
+        </section>
+        <section id="ranking" class="aba">
+            <div class="card">
+                <h2>🏆 Ranking</h2>
+
+                <ul id="listaRanking"></ul>
+            </div>
+        </section>
+
+    </main>
+
+    <audio id="somAcerto" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+    <audio id="somErro" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+
 </html>
