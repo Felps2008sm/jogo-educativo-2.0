@@ -327,3 +327,14 @@ function toggleMenu() {
     const menu = document.getElementById("menu");
     menu.classList.toggle("ativo");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const botao = document.querySelector(".menu-toggle");
+    const menu = document.getElementById("menu");
+
+    if (botao && menu) {
+        botao.addEventListener("click", () => {
+            menu.classList.toggle("ativo");
+        });
+    }
+});
