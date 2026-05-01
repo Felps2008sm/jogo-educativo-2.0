@@ -164,9 +164,9 @@ button:active {
 }
 
 .acerto {
-    animation: acerto 0.3s;
+    animation: acerto 0.2s;
 }
 
 .erro {
-    animation: erro 0.3s;
+    animation: erro 0.2s;
 }
