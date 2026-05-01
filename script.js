@@ -1,106 +1,164 @@
 const banco = {
-    pre: [{ w:"GATO",en:"CAT",img:"🐱"}],
-    facil: [{ w:"PATO",en:"DUCK",img:"🦆"}],
-    medio: [{ w:"MACACO",en:"MONKEY",img:"🐵"}],
-    dificil: [{ w:"ELEFANTE",en:"ELEPHANT",img:"🐘"}]
+    pre: [
+        { w:"GATO", en:"CAT", img:"🐱" },
+        { w:"BOLA", en:"BALL", img:"⚽" }
+    ],
+    facil: [
+        { w:"PATO", en:"DUCK", img:"🦆" }
+    ],
+    medio: [
+        { w:"MACACO", en:"MONKEY", img:"🐵" }
+    ],
+    dificil: [
+        { w:"ELEFANTE", en:"ELEPHANT", img:"🐘" }
+    ]
 };
 
 let palavras = banco.pre;
 let atual;
-let xp=0,nivel=1,vidas=3;
-let acertosSeguidos=0;
+let xp = 0;
+let nivel = 1;
+let vidas = 3;
+let respostaUsuario = "";
 
-// ================= TROCAR ABA
+// ================= ABA
 function trocarAba(id){
     document.querySelectorAll(".aba").forEach(a=>a.classList.remove("ativa"));
     document.getElementById(id).classList.add("ativa");
 
-    if(id==="reverso") novaPerguntaReversa();
     if(id==="ingles"||id==="portugues") novaPalavra();
+    if(id==="montar") novaMontar();
+    if(id==="reverso") novaReversa();
 }
 
 // ================= NIVEL
 function selecionarNivel(n){
-    palavras=banco[n];
+    palavras = banco[n];
+    novaPalavra();
 }
 
-// ================= NOVA PALAVRA
+// ================= PALAVRA
 function novaPalavra(){
-    atual=palavras[Math.floor(Math.random()*palavras.length)];
+    atual = palavras[Math.floor(Math.random()*palavras.length)];
 
-    document.getElementById("emoji").innerText=atual.img;
-    document.getElementById("emojiEN").innerText=atual.img;
-    document.getElementById("palavraEN").innerText=atual.en;
+    document.getElementById("emoji").innerText = atual.img;
+    document.getElementById("emojiEN").innerText = atual.img;
+    document.getElementById("palavraEN").innerText = atual.en;
+
+    document.getElementById("resposta").value = "";
+    document.getElementById("respostaEN").value = "";
 }
 
 // ================= VERIFICAR
-function verificar(tipo,input,fb){
-    const r=document.getElementById(input).value.toUpperCase();
-    const c= tipo==="pt"?atual.w:atual.en;
+function verificar(tipo){
+    let r = tipo==="pt"
+        ? document.getElementById("resposta").value.toUpperCase()
+        : document.getElementById("respostaEN").value.toUpperCase();
 
-    if(r===c) acerto(fb);
-    else erro(fb,c);
+    let c = tipo==="pt" ? atual.w : atual.en;
+
+    if(r === c) acerto(tipo);
+    else erro(tipo,c);
 }
 
 // ================= ACERTO
-function acerto(id){
-    xp+=10;
-    acertosSeguidos++;
-
-    if(acertosSeguidos===5) palavras=banco.facil;
-    if(acertosSeguidos===10) palavras=banco.medio;
-
+function acerto(tipo){
+    xp += 10;
     document.getElementById("somAcerto").play();
-    document.getElementById(id).innerText="✅";
 
-    atualizarUI();
+    if(tipo==="pt")
+        document.getElementById("feedback").innerText="✅";
+    else
+        document.getElementById("feedbackEN").innerText="✅";
+
+    atualizar();
 }
 
 // ================= ERRO
-function erro(id,c){
+function erro(tipo,c){
     vidas--;
-    acertosSeguidos=0;
-
     document.getElementById("somErro").play();
-    document.getElementById(id).innerText="❌ "+c;
 
-    atualizarUI();
+    if(tipo==="pt")
+        document.getElementById("feedback").innerText="❌ "+c;
+    else
+        document.getElementById("feedbackEN").innerText="❌ "+c;
+
+    atualizar();
 }
 
 // ================= UI
-function atualizarUI(){
-    xpEl.innerText=xp;
-    nivelEl.innerText=nivel;
-    vidasEl.innerText=vidas;
+function atualizar(){
+    document.getElementById("xp").innerText = xp;
+    document.getElementById("nivel").innerText = nivel;
+    document.getElementById("vidas").innerText = vidas;
 }
 
-// ================= REVERSO
-function novaPerguntaReversa(){
-    const correta=palavras[Math.floor(Math.random()*palavras.length)];
+// ================= MONTAR
+function novaMontar(){
+    const item = palavras[Math.floor(Math.random()*palavras.length)];
+    atual = item;
+    respostaUsuario="";
 
-    document.getElementById("palavraReverso").innerText=correta.en;
+    document.getElementById("emojiMontar").innerText=item.img;
 
-    let opcoes=[correta];
-    while(opcoes.length<4){
-        opcoes.push(correta);
-    }
+    let letras = item.w.split("").sort(()=>Math.random()-0.5);
 
-    const cont=document.getElementById("opcoesEmoji");
+    let cont = document.getElementById("letras");
     cont.innerHTML="";
 
-    opcoes.forEach(op=>{
-        const b=document.createElement("button");
-        b.innerText=op.img;
+    letras.forEach(l=>{
+        let b=document.createElement("button");
+        b.innerText=l;
         b.onclick=()=> {
-            if(op===correta) acerto("feedbackReverso");
-            else erro("feedbackReverso",correta.img);
+            respostaUsuario+=l;
+            document.getElementById("respostaMontada").innerText=respostaUsuario;
         };
         cont.appendChild(b);
     });
 }
 
+function verificarMontagem(){
+    if(respostaUsuario===atual.w)
+        document.getElementById("feedbackMontar").innerText="✅";
+    else
+        document.getElementById("feedbackMontar").innerText="❌ "+atual.w;
+}
+
+function limpar(){
+    respostaUsuario="";
+    document.getElementById("respostaMontada").innerText="";
+}
+
+// ================= REVERSO
+function novaReversa(){
+    const correta = palavras[Math.floor(Math.random()*palavras.length)];
+
+    document.getElementById("palavraReverso").innerText = correta.en;
+
+    let cont = document.getElementById("opcoesEmoji");
+    cont.innerHTML="";
+
+    palavras.forEach(p=>{
+        let b=document.createElement("button");
+        b.innerText=p.img;
+
+        b.onclick=()=>{
+            if(p===correta){
+                document.getElementById("feedbackReverso").innerText="✅";
+                xp+=10;
+            } else {
+                document.getElementById("feedbackReverso").innerText="❌";
+            }
+            atualizar();
+        };
+
+        cont.appendChild(b);
+    });
+}
+
 // ================= START
-window.onload=()=>{
+window.onload = ()=>{
     novaPalavra();
-    atualizarUI();
+    atualizar();
 };
