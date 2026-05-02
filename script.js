@@ -255,9 +255,10 @@ function gerarLetras(palavra) {
         const btn = document.createElement("button");
         btn.innerText = letra;
         btn.className = "letra";
-        btn.onclick = () => selecionarLetra(letra);
-        container.appendChild(btn);
-    });
+        btn.onclick = () => {
+    selecionarLetra(letra);
+    btn.disabled = true;
+};
 }
 
 function selecionarLetra(letra) {
