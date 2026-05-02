@@ -141,7 +141,10 @@ function acerto(id) {
     atualizarUI();
 
     setTimeout(() => {
-        const aba = document.querySelector(".aba.ativa")?.id;
+        const aba = document.querySelector(".aba.ativa");
+if (!aba) return;
+
+const id = aba.id;
 
         if (aba === "montar") {
             novaPalavraMontar();
