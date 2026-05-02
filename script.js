@@ -52,8 +52,12 @@ function salvarProgresso() {
 }
 
 function carregarProgresso() {
-    const dados = JSON.parse(localStorage.getItem("progresso"));
-
+    let dados = null;
+try {
+    dados = JSON.parse(localStorage.getItem("progresso"));
+} catch(e) {
+    console.warn("Erro ao carregar progresso");
+}
     if (dados) {
         nomeJogador = dados.nome || "";
         xp = dados.xp || 0;
