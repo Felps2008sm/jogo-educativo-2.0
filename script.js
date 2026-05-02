@@ -117,7 +117,7 @@ function verificarPT() {
 // =============================
 function verificarEN() {
     const r = normalizar(document.getElementById("respostaEN").value);
-    const c = normalizar(atual.w);
+    const c = normalizar(atual.en);
 
     r === c ? acerto("feedbackEN") : erro("feedbackEN", atual.w);
 }
